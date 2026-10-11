@@ -1,0 +1,11 @@
+# Reemplazar @USUARIO_IANIS y @USUARIO_JUANES por los usuarios reales de GitHub (Semana 0).
+*                         @USUARIO_JUANES @USUARIO_IANIS
+scripts/preparar_datos.py @USUARIO_IANIS
+src/churn/datos.py        @USUARIO_IANIS
+src/churn/caracterizacion.py @USUARIO_IANIS
+src/churn/priorizacion.py @USUARIO_IANIS
+src/churn/relacion.py     @USUARIO_JUANES
+src/churn/modelos.py      @USUARIO_JUANES
+src/churn/evaluacion.py   @USUARIO_JUANES
+scripts/entrenar.py       @USUARIO_JUANES
+.github/                  @USUARIO_JUANES
