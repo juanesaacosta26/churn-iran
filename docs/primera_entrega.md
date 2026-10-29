@@ -15,9 +15,9 @@ los primeros nueve meses permiten identificar cuáles presentan mayor riesgo de 
 con el propósito de apoyar la priorización de clientes para posibles acciones de retención.
 
 ## Objetivos específicos → dónde se trabajan en el repositorio
-1. Identificar las características de comportamiento con mayor relación con el abandono → `src/churn/relacion.py` (Juanes, S1) y modelos (Juanes, S3).
-2. Caracterizar el comportamiento según la condición final de abandono → `src/churn/caracterizacion.py` (Ianis, S2).
-3. (Objetivo general) Predecir y apoyar la priorización → `src/churn/modelos.py` (Juanes, S2–S3) y `src/churn/priorizacion.py` (Ianis, S3).
+1. Identificar las características de comportamiento con mayor relación con el abandono → `src/churn/relacion.py` (Juanes, bloque 1) y modelos (Juanes, bloque 2).
+2. Caracterizar el comportamiento según la condición final de abandono → `src/churn/caracterizacion.py` (Ianis, bloque 2).
+3. (Objetivo general) Predecir y apoyar la priorización → `src/churn/modelos.py` (Juanes, bloque 2) y `src/churn/priorizacion.py` (Ianis, bloques 2 y 3).
 
 ## Alcance y limitaciones (recordatorio)
 - 3150 clientes, unidad de análisis = cliente; no se incorporan variables externas.

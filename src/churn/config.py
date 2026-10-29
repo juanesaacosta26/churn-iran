@@ -1,4 +1,4 @@
-"""Configuración compartida. Solo se cambia en la reunión semanal (cierre de semana)."""
+"""Configuración compartida. Solo se cambia en la reunión de cierre de cada bloque."""
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
@@ -49,3 +49,24 @@ ETIQUETAS = {
     "estado": {1: "Activo", 2: "No activo"},
     "churn": {0: "Permanece", 1: "Abandona"},
 }
+
+# ---------------------------------------------------------------------------
+# Agregado el 28 de octubre al ajustar el calendario. Valores PROVISIONALES:
+# se confirman (o cambian) en las reuniones indicadas y se anota en docs/decisiones.md.
+
+# Arranque (jue 29 oct): columna de edad que se quita (son la misma información).
+COLUMNA_EDAD_A_QUITAR = "grupo_edad"
+
+# Reunión 1 (lun 2 nov): variables del modelo, según la propuesta de Juanes.
+# Provisional = todas menos grupo_edad.
+VARIABLES_MODELO = SERVICIO + USO + SUSCRIPCION + ["edad"]
+# Sensibilidad ("¿en qué medida?", bloque 2):
+VARIABLES_SIN_ESTADO_QUEJAS = [v for v in VARIABLES_MODELO if v not in ("estado", "quejas")]
+VARIABLES_SOLO_USO = USO + ["fallas_llamada"]
+
+PLIEGUES_CV = 5
+
+# Reunión 2 (sáb 7 nov): un falso negativo cuesta k veces un falso positivo.
+K_COSTOS = [2, 5, 10]
+# Fracción de clientes que el equipo de retención alcanza a contactar.
+CAPACIDADES = (0.10, 0.20, 0.30)

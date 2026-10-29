@@ -3,14 +3,19 @@ priorización sin esperar el modelo de Juanes. No usar sus cifras en el informe.
 
 Ya se corrió una vez; el resultado está en data/processed/fixtures/.
 """
-import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+import sys
+from pathlib import Path
 
-from churn import config
-from churn.datos import cargar_crudo
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))  # para no tener que fijar PYTHONPATH
+
+import pandas as pd  # noqa: E402
+from sklearn.linear_model import LogisticRegression  # noqa: E402
+from sklearn.model_selection import train_test_split  # noqa: E402
+from sklearn.pipeline import make_pipeline  # noqa: E402
+from sklearn.preprocessing import StandardScaler  # noqa: E402
+
+from churn import config  # noqa: E402
+from churn.datos import cargar_crudo  # noqa: E402
 
 
 def main():

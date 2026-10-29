@@ -2,7 +2,8 @@
 
 Ianis Ramírez Cárdenas · Juan Esteban Acosta Morales · Pensamiento Crítico II · Noviembre de 2026
 
-> Cada sección tiene dueño. Se escribe en la Semana 4 con las cifras congeladas en el cierre de la Semana 3.
+> Cada sección tiene dueño. Las secciones 1, 2 y 3 se empiezan el lunes 9 de noviembre; el resto se escribe el
+> miércoles 11 con las cifras congeladas el martes 10 (etiqueta `s3`).
 > Toda cifra sale de `reports/tablas/` o `docs/hallazgos.md`; nada se escribe "de memoria".
 
 ## 1. Planteamiento, pregunta y objetivos — Ianis

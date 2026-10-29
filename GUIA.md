@@ -1,14 +1,28 @@
-# Churn Telco Irán: guía semana a semana
+# Churn Telco Irán: guía día a día (ajustada)
 
-Octubre 10, 2026 · Ianis y Juanes
+Octubre 28, 2026 · Ianis y Juanes
 
-## Cómo usar esta guía
+## Qué cambió
 
-Cada persona busca su nombre dentro de la semana en la que va y sigue las sesiones en orden, marcando las casillas. Al final de cada sesión debe poder mostrar lo que dice **"Listo cuando"**. Las cifras de "Listo cuando" se calcularon al armar el repositorio: si a ustedes les da algo distinto, no es necesariamente un error, pero hay que entender por qué y anotarlo en `docs/decisiones.md`.
+Esta versión reemplaza la guía del 10 de octubre: el trabajo en el repositorio no había empezado y **la presentación es el viernes 13 de noviembre**. Quedan 15 días, así que las cuatro semanas se comprimen en cuatro bloques:
 
-**Fechas:** arranque = domingo 11 de octubre · reuniones de PR = sábados 17, 24 y 31 de octubre · ensayo y cierre = jueves 5 de noviembre · **entrega ≈ viernes 6 de noviembre** (ajusten a la fecha exacta que dé la profesora). Los lunes 12 de octubre y 2 de noviembre son festivos.
+| Bloque | Fechas | Qué sale | Reunión de PR |
+|---|---|---|---|
+| Arranque | jueves 29 oct | Repositorio en GitHub y los dos con `pytest` corriendo | (es la misma llamada) |
+| 1 · Datos y relación | vie 30 oct – lun 2 nov | Base limpia y objetivo específico 1 | **lunes 2 nov (festivo)**, etiqueta `s1` |
+| 2 · Caracterización y modelos | mar 3 – sáb 7 nov | Objetivo específico 2, modelos, primera priorización | **sábado 7 nov**, etiqueta `s2` |
+| 3 · Cierre de cifras | dom 8 – mar 10 nov | Priorización final, interpretación, inicio del informe | **martes 10 nov**, etiqueta `s3` = cifras congeladas |
+| 4 · Informe y presentación | mié 11 – vie 13 nov | Informe, diapositivas, ensayo | ensayo **jueves 12**, presentación **viernes 13** |
 
-**Carga:** tres sesiones por semana de 2 a 3 horas cada una (unas 7–8 horas por persona por semana) más la reunión del sábado.
+**Carga:** unas 10 sesiones de 2 a 3 horas por persona en 15 días, más las reuniones: unas 5 por semana en lugar de 3. Para que alcance, se recortaron las mejoras opcionales y el repositorio trae más cosas listas (ver abajo). Si el informe escrito tiene otra fecha, confírmenlo en el arranque.
+
+### Qué cambió en el repositorio (28 de octubre)
+
+- **Las pruebas ya están escritas** (`tests/test_*.py`), con las cifras de referencia. Ya no hay que crearlas en cada sesión. Al inicio `pytest -q` da **4 passed, 28 skipped**: las *skipped* son las de funciones que todavía tienen `raise NotImplementedError`. Cuando alguien implementa su función, sus pruebas empiezan a comprobar las cifras; si una falla, algo no coincide. Para ver qué falta: `pytest -q -rs`. Meta del martes 10: **0 skipped**.
+- Cada función en `src/churn/` dice ahora qué columnas debe devolver y su cifra de referencia (sin cambiar las firmas acordadas). Se agregó `comparar_modelos()` en `modelos.py`.
+- `config.py` trae, como valores provisionales, `COLUMNA_EDAD_A_QUITAR`, `VARIABLES_MODELO`, los conjuntos de sensibilidad, `PLIEGUES_CV`, `K_COSTOS` y `CAPACIDADES`. Se confirman en las reuniones.
+- Los scripts ya encuentran el paquete solos: no hace falta fijar `PYTHONPATH`.
+- `entrenar.py` acepta `--final --modelo <nombre>`.
 
 ### Quién es quién
 
@@ -18,289 +32,224 @@ Cada persona busca su nombre dentro de la semana en la que va y sigue las sesion
 | Juanes | J | Repositorio, relación de variables y modelos | `.github/`, `scripts/entrenar.py`, `src/churn/relacion.py`, `src/churn/modelos.py`, `src/churn/evaluacion.py`, notebooks `*_J.ipynb`, `README.md` |
 | Ambos | — | Se cambian **solo en la reunión** | `src/churn/config.py`, `docs/decisiones.md`, `docs/hallazgos.md`, `docs/contrato_predicciones.md`, `reports/informe_final.md` (cada quien sus secciones) |
 
-Cómo se reparte el proyecto frente a la primera entrega:
+Frente a la primera entrega:
 
-- **Objetivo específico 1** (variables más relacionadas con el abandono) → Juanes, semana 1, y lo confirma con los modelos en la semana 3.
-- **Objetivo específico 2** (caracterizar a quienes abandonan frente a quienes permanecen) → Ianis, semana 2.
-- **Objetivo general** (predecir y apoyar la priorización) → Juanes construye el modelo (semanas 2 y 3) e Ianis lo convierte en una lista de prioridades para el equipo de retención (semana 3).
-- **Informe y presentación** → mitad y mitad (semana 4).
+- **Objetivo específico 1** (variables más relacionadas con el abandono) → Juanes, bloque 1; lo confirma con los modelos en el bloque 2.
+- **Objetivo específico 2** (caracterizar a quienes abandonan frente a quienes permanecen) → Ianis, bloque 2.
+- **Objetivo general** (predecir y apoyar la priorización) → Juanes construye el modelo (bloque 2) e Ianis lo convierte en una lista de prioridades (bloques 2 y 3).
+- **Informe y presentación** → mitad y mitad (bloques 3 y 4).
 
-La letra se usa en las ramas (`i/s1-datos`, `j/s2-modelo-base`) y en los notebooks (`02_caracterizacion_I.ipynb`).
+La letra se usa en las ramas (`i/b1-datos`, `j/b2-modelos`) y en los notebooks.
 
-### Rutina de cada semana
+### Rutina
 
-1. **Lunes o martes (5 min, por chat):** cada quien escribe qué sesiones va a hacer esta semana, copiándolas de esta guía.
-2. **Durante la semana:** trabajen solo en su rama y en sus archivos. Si necesitan algo del otro, usen el fixture o el contrato (ver abajo); no esperen.
-3. **Miércoles (5 min, por chat):** tres líneas: qué terminé, qué me falta, qué me bloquea. Suban sus cambios a su rama aunque no estén terminados (`git push`).
-4. **Viernes, antes de las 20:00:** cada quien abre su PR.
-5. **Sábado, reunión semanal (1 a 1.5 h, en llamada):** cada quien comparte pantalla y muestra `pytest` en verde y su resultado. El otro aprueba si se cumple el "Listo cuando". Se fusiona a `main`, se toman las decisiones pendientes y se anotan en `docs/decisiones.md`, se etiqueta la semana (`s1`, `s2`…) y los dos hacen `git checkout main && git pull` para empezar la siguiente.
+1. **Al empezar cada bloque (5 min, por chat):** cada quien escribe qué sesiones hará y qué día.
+2. **Durante el bloque:** trabajar solo en su rama y en sus archivos. Si necesitan algo del otro, usen el fixture o el contrato; no esperen.
+3. **A mitad del bloque (5 min, por chat):** qué terminé, qué me falta, qué me bloquea. `git push` aunque no esté terminado.
+4. **La víspera de la reunión, antes de las 20:00:** cada quien abre su PR.
+5. **Reunión (1 a 1.5 h, en llamada):** cada quien comparte pantalla y muestra `pytest -q` y su resultado. El otro aprueba si se cumple el "Listo cuando". Se fusiona a `main`, se anotan las decisiones en `docs/decisiones.md`, se etiqueta (`git tag s1 && git push --tags`) y los dos hacen `git checkout main && git pull`.
 
-### Cómo abrir un PR (para los dos)
+### Cómo abrir un PR
 
 ```
 git checkout main && git pull
-git checkout -b i/s2-caracterizacion      # su letra / semana-tema
+git checkout -b i/b2-caracterizacion      # su letra / bloque-tema
 # ... trabajar, guardar ...
 git add src/churn/caracterizacion.py      # solo los archivos que tocaron, nunca git add .
 git commit -m "caracterizacion: tabla de numéricas con Mann-Whitney"
-git push -u origin i/s2-caracterizacion
+git push -u origin i/b2-caracterizacion
 # en GitHub: "Compare & pull request" y llenar la plantilla
 ```
 
 En la reunión no se piden cambios de estilo; solo se bloquea un PR si algo no funciona, si una cifra no tiene respaldo o si toca archivos del otro.
 
-### Palabras que se usan en la guía
+### Palabras que se usan
 
 - **Contrato:** el formato del archivo de predicciones que Juanes le entrega a Ianis (`docs/contrato_predicciones.md`): `fila_original`, `conjunto`, `churn_real`, `prob_churn`, `modelo`.
-- **Fixture:** un archivo de ejemplo con el formato del contrato, ya creado en `data/processed/fixtures/predicciones_ejemplo.csv`, para que Ianis trabaje la priorización sin esperar el modelo. Sus cifras **no** van en el informe.
+- **Fixture:** `data/processed/fixtures/predicciones_ejemplo.csv`, con el formato del contrato y un modelo simple de 3 variables, para que Ianis programe la priorización sin esperar. Sus cifras **no** van en el informe.
 - **Base cruda / base limpia:** `data/raw/customer_churn.csv` (3150 filas, nunca se modifica) / `data/processed/clientes.csv` (lo genera el script de Ianis).
 - **Partición:** la división fija entrenamiento/prueba en `data/processed/particion.csv`. Los dos usan la misma.
-- **Cifras congeladas:** después del cierre de la semana 3 ningún número cambia; el informe se escribe sobre esas cifras.
+- **Cifras congeladas:** después de la reunión del martes 10 ningún número cambia; el informe se escribe sobre esas cifras.
 
 ---
 
-## Semana 0 · domingo 11 de octubre · Arranque
+## Arranque · jueves 29 de octubre
 
-**Objetivo:** el repositorio en GitHub, los dos con el proyecto corriendo en su computador.
+**Objetivo:** el repositorio en GitHub y los dos con el proyecto corriendo.
 
-**Juanes · subir el repositorio (1 h, antes de la llamada)**
+**Juanes · repositorio (45 min, antes de la llamada)**
 
-- [ ] Crear en GitHub un repositorio **privado** llamado `churn-iran`, vacío (sin README).
-- [ ] Descomprimir `churn-iran.zip`; ya trae git iniciado con un primer commit. Dentro de la carpeta: `git remote add origin https://github.com/<USUARIO>/churn-iran.git` y `git push -u origin main`.
-- [ ] Settings → Collaborators: invitar a Ianis.
-- [ ] Settings → Branches: proteger `main` (requerir PR, 1 aprobación y que pase el check "pruebas").
+- [ ] El repositorio ya está en GitHub (`juanesaacosta26/churn-iran`). Subir el commit del ajuste del 28 de octubre si aún no está: `git push`.
+- [ ] Settings → Collaborators: confirmar que Ianis está invitada. Settings → Branches: proteger `main` (requerir PR, 1 aprobación y que pase el check "pruebas").
 - [ ] Cambiar `@USUARIO_IANIS` y `@USUARIO_JUANES` en `.github/CODEOWNERS` por los usuarios reales.
 - **Listo cuando:** la pestaña Actions muestra "pruebas" en verde.
 
-**Los dos · reunión de arranque (1.5 h, en llamada)**
+**Los dos · llamada de arranque (1 h)**
 
-- [ ] (15 min) Leer juntos esta sección y el README.
-- [ ] (20 min) Juanes comparte pantalla y recorre las carpetas; ubicar los archivos de cada uno en la tabla "Quién es quién".
-- [ ] (20 min) Cada quien clona, crea su entorno (`python -m venv .venv`), instala `requirements.txt` y corre `pytest -q`: deben pasar 4 pruebas.
-- [ ] (25 min) Tomar las dos primeras decisiones y anotarlas en `docs/decisiones.md`: ¿se quitan las 300 filas duplicadas? (sugerido: sí) y ¿se usa `edad` o `grupo_edad`? (son la misma información).
-- [ ] (10 min) Confirmar la fecha exacta de entrega y si la profesora pide un formato (Word, PDF, plantilla, número de páginas, tiempo de presentación).
+- [ ] (10 min) Leer juntos esta sección.
+- [ ] (15 min) Cada quien clona, crea su entorno e instala (ver README) y corre `pytest -q`: **4 passed, 28 skipped**.
+- [ ] (10 min) Abrir `tests/conftest.py` y una prueba cualquiera para entender cómo funcionan las pruebas en espera.
+- [ ] (15 min) Tomar las dos primeras decisiones de `docs/decisiones.md` (duplicados y edad) y anotarlas.
+- [ ] (10 min) Confirmar con la profesora el tiempo de la presentación y si el informe escrito se entrega el mismo 13 (formato, plantilla, número de páginas).
 
 ---
 
-## Semana 1 · 12 al 17 de octubre · Datos limpios y relación con el abandono
+## Bloque 1 · viernes 30 de octubre al lunes 2 de noviembre · Datos limpios y relación con el abandono
 
-**Objetivo de la semana:** una base limpia y documentada, y una primera respuesta al objetivo específico 1. Al cierre, cualquiera puede correr `python scripts/preparar_datos.py` y obtener `clientes.csv`.
+**Objetivo:** base limpia y documentada, y una primera respuesta al objetivo específico 1.
 
 ### Ianis
 
-**Sesión 1 · datos limpios (2.5 h)**
+**Sesión 1 · datos limpios (2 h, viernes 30 o sábado 31)**
 
-- [ ] En `scripts/preparar_datos.py`: contar las filas duplicadas exactas (comparando todas las columnas menos `fila_original`). Deben ser 300.
-- [ ] Quitarlas conservando la primera aparición (según lo decidido el domingo).
-- [ ] Quitar `grupo_edad` o `edad` (según lo decidido).
-- [ ] Guardar `data/processed/clientes.csv` sin índice.
-- **Listo cuando:** `clientes.csv` tiene 2850 filas y 446 clientes que abandonan (15.6 %).
-
-**Sesión 2 · calidad de los datos (2.5 h)**
-
-- [ ] Que el mismo script escriba `docs/calidad_datos.md`: por columna mínimo, percentil 5, mediana, percentil 95, máximo, número de ceros y número de atípicos (regla de 1.5 × IQR).
-- [ ] Agregar los casos raros: los 107 clientes con `segundos_uso = 0` (¿cuántos abandonan?), y cualquier otro rango sospechoso.
+- [ ] En `scripts/preparar_datos.py`: contar las filas duplicadas exactas (todas las columnas menos `fila_original`; deben ser 300), quitarlas conservando la primera aparición, quitar `config.COLUMNA_EDAD_A_QUITAR` y guardar `clientes.csv` sin índice.
 - [ ] En `src/churn/datos.py`, implementar `cargar_limpio()`.
-- [ ] Crear `tests/test_preparar.py`: 2850 filas, sin duplicados, `churn` solo 0 y 1, `fila_original` única.
-- **Listo cuando:** `pytest -q` pasa y `calidad_datos.md` se regenera solo al correr el script.
+- **Listo cuando:** `clientes.csv` tiene 2850 filas y 446 abandonos (15.6 %) y pasan las 5 pruebas de `test_preparar.py`.
 
-**Sesión 3 · distribuciones y diccionario (2 h)**
+**Sesión 2 · calidad, diccionario y distribuciones (2.5 h, domingo 1)**
 
-- [ ] En `notebooks/01_calidad_datos_I.ipynb`: histograma de cada variable numérica; guardar `reports/figures/distribuciones.png`.
+- [ ] Que el mismo script escriba `docs/calidad_datos.md`: por columna mínimo, percentil 5, mediana, percentil 95, máximo, ceros y atípicos (1.5 × IQR); agregar los 107 clientes con `segundos_uso = 0` (¿cuántos abandonan?).
 - [ ] Completar `docs/diccionario_datos.md` con los rangos reales.
-- [ ] Abrir el PR `i/s1-datos`.
-- **Listo cuando:** el PR está abierto y el check "pruebas" está en verde.
+- [ ] En `notebooks/01_calidad_datos_I.ipynb`: histogramas de las numéricas → `reports/figures/distribuciones.png`.
+- [ ] Abrir el PR `i/b1-datos`.
+- **Listo cuando:** `calidad_datos.md` se regenera solo al correr el script y el check "pruebas" está en verde.
 
 ### Juanes
 
-**Sesión 1 · relación con el abandono (2.5 h)**
+**Sesión 1 · relación con el abandono (2 h, viernes 30 o sábado 31)**
 
-- [ ] En `src/churn/relacion.py`, `correlacion_con_churn(df)`: correlación punto-biserial y de Spearman de cada predictor con `churn`, con su p-valor, ordenada por valor absoluto. Usar `cargar_crudo()` esta semana (en la semana 2 se cambia a `cargar_limpio()`).
-- [ ] `tasa_por_categoria(df, columna)`: n y tasa de churn por nivel.
+- [ ] En `src/churn/relacion.py`: `correlacion_con_churn(df)` y `tasa_por_categoria(df, columna)`. Usar `cargar_crudo()` hasta que se fusione `cargar_limpio()`.
 - [ ] Guardar `reports/tablas/relacion_churn.csv`.
-- **Listo cuando:** en la base cruda el orden empieza con `quejas` (0.53), `estado` (0.50) y `frecuencia_llamadas` (0.30).
+- **Listo cuando:** el orden empieza con `quejas` (0.53), `estado` (0.50) y `frecuencia_llamadas` (−0.30) y pasan las 3 pruebas de `test_relacion.py` que usan la base cruda.
 
-**Sesión 2 · redundancias (2.5 h)**
+**Sesión 2 · redundancias y propuesta de variables (2.5 h, domingo 1)**
 
-- [ ] `redundancias(df, umbral=0.8)`: pares de predictores con |r| ≥ 0.8 y el VIF de cada uno (`statsmodels`).
-- [ ] Mapa de calor en `reports/figures/correlaciones.png`.
-- [ ] Revisar en especial: `edad`–`grupo_edad`, `segundos_uso`–`frecuencia_llamadas` y `valor_cliente` contra las de uso.
-- [ ] Escribir en `docs/decisiones.md` una propuesta: qué variables entran al modelo y qué hacer con `estado` y `quejas` (¿son señales tempranas o casi el resultado?).
-- **Listo cuando:** la tabla de pares y VIF existe y la propuesta está escrita para discutirla el sábado.
+- [ ] `redundancias(df)`: pares con |r| ≥ 0.8 y VIF (`statsmodels`). Revisar `segundos_uso`–`frecuencia_llamadas` y `valor_cliente` contra las de uso.
+- [ ] Mapa de calor → `reports/figures/correlaciones.png`.
+- [ ] Escribir en `docs/decisiones.md` la propuesta: qué variables entran al modelo, qué hacer con `estado`, `quejas` y `valor_cliente`.
+- [ ] `notebooks/03_relacion_variables_J.ipynb` con las tres gráficas más claras y dos hallazgos en `docs/hallazgos.md`, cada uno con su cifra.
+- [ ] Abrir el PR `j/b1-relacion`.
+- **Listo cuando:** la propuesta está escrita y el PR está en verde (la prueba de redundancias corre cuando ya se haya fusionado el PR de Ianis).
 
-**Sesión 3 · pruebas y notebook (2 h)**
-
-- [ ] `tests/test_relacion.py`: `quejas` es la de mayor correlación; la tasa de churn con queja es mayor a 0.8 y sin queja menor a 0.11.
-- [ ] `notebooks/03_relacion_variables_J.ipynb`: las tres gráficas más claras y un párrafo de lectura.
-- [ ] Dos líneas en `docs/hallazgos.md`, cada una con su cifra.
-- [ ] Abrir el PR `j/s1-relacion`.
-- **Listo cuando:** el PR está abierto y en verde.
-
-**Cierre de la semana 1 · sábado 17 (1 h):** se fusiona primero el PR de Ianis y luego el de Juanes. Se decide qué variables entran al modelo (propuesta de Juanes) y se anota. Se etiqueta `s1`.
+**Reunión 1 · lunes 2 de noviembre, festivo (1 h):** se fusiona primero el PR de Ianis y luego el de Juanes. Se decide qué variables entran al modelo, se actualiza `VARIABLES_MODELO` en `config.py` si cambia y se etiqueta `s1`. Juanes cambia `relacion.py` a `cargar_limpio()` en su siguiente rama.
 
 ---
 
-## Semana 2 · 19 al 24 de octubre · Caracterización y modelo base
+## Bloque 2 · martes 3 al sábado 7 de noviembre · Caracterización, modelos y primera priorización
 
-**Objetivo de la semana:** responder el objetivo específico 2 con cifras y pruebas estadísticas, y tener el primer modelo con su archivo de predicciones. Los dos parten de `main` con la etiqueta `s1` y usan `cargar_limpio()`.
+**Objetivo:** objetivo específico 2 con cifras y pruebas estadísticas; modelos comparados y modelo final elegido; priorización funcionando con el modelo base.
+
+**Entregas entre los dos:** Juanes sube `predicciones_base.csv` a su rama **a más tardar el miércoles 4 en la noche** y `predicciones_final.csv` **a más tardar el sábado 7 al mediodía**.
 
 ### Ianis
 
-**Sesión 1 · variables numéricas (2.5 h)**
+**Sesión 1 · numéricas y categóricas (3 h, martes 3)**
 
-- [ ] En `src/churn/caracterizacion.py`, `tabla_numericas(df)`: por variable, mediana, Q1 y Q3 de quienes abandonan y de quienes permanecen, p-valor de Mann-Whitney y tamaño del efecto (r = Z/√n o delta de Cliff).
-- [ ] Ordenar por tamaño del efecto y guardar `reports/tablas/caracterizacion_numericas.csv`.
-- **Listo cuando:** la mediana de `segundos_uso` es 1256.5 en quienes abandonan contra 3596.5 en quienes permanecen, y la de `frecuencia_llamadas` 29 contra 64.
+- [ ] En `src/churn/caracterizacion.py`: `tabla_numericas(df)` (medianas, cuartiles, Mann-Whitney y delta de Cliff) y `tabla_categoricas(df)` (n, tasa, chi²; Fisher si hay celdas pequeñas).
+- [ ] Guardar `caracterizacion_numericas.csv` y `caracterizacion_categoricas.csv` en `reports/tablas/`.
+- **Listo cuando:** pasan las 8 pruebas de `test_caracterizacion.py` (segundos de uso 1256.5 contra 3596.5; con queja 82.6 % contra 9.8 %; no activo 47.5 % contra 5.6 %; contrato 2.6 % contra 16.8 %).
 
-**Sesión 2 · variables categóricas (2.5 h)**
+**Sesión 2 · figuras y hallazgos (2.5 h, miércoles 4)**
 
-- [ ] `tabla_categoricas(df)`: por variable y nivel, n, tasa de churn y p-valor de chi² (o Fisher si hay celdas pequeñas).
-- [ ] Guardar `reports/tablas/caracterizacion_categoricas.csv`.
-- **Listo cuando:** con queja 82.6 % contra 9.8 % sin queja; no activo 47.5 % contra 5.6 % activo; contrato 2.6 % contra 16.8 % pago por uso.
+- [ ] Diagramas de caja por grupo (escala logarítmica en las de uso) y barras de tasa por categoría → `reports/figures/caracterizacion_*.png`.
+- [ ] `notebooks/02_caracterizacion_I.ipynb` con la lectura de cada figura.
+- [ ] Cinco hallazgos en `docs/hallazgos.md`, cada uno con cifra y figura.
+- **Listo cuando:** los cinco hallazgos están escritos.
 
-**Sesión 3 · figuras y hallazgos (2.5 h)**
+**Sesión 3 · deciles y capacidad (2.5 h, jueves 5 o viernes 6)**
 
-- [ ] Diagramas de caja por grupo de churn (escala logarítmica para las de uso) y barras de tasa de churn por categoría; guardar en `reports/figures/caracterizacion_*.png`.
-- [ ] `notebooks/02_caracterizacion_I.ipynb` con la lectura de las figuras.
-- [ ] Cinco hallazgos en `docs/hallazgos.md`, cada uno con cifra y figura de respaldo.
-- [ ] `tests/test_caracterizacion.py` con las cifras de las sesiones 1 y 2.
-- [ ] Abrir el PR `i/s2-caracterizacion`.
-- **Listo cuando:** los cinco hallazgos están escritos y el PR está en verde.
+- [ ] En `src/churn/priorizacion.py`: `tabla_deciles(pred)` y `capacidad(pred)`. Probar primero con el fixture y luego con `predicciones_base.csv` de Juanes (`git fetch` y `git checkout origin/j/b2-modelos -- data/processed/predicciones_base.csv`; no incluirlo en su commit).
+- [ ] Completar la parte del bloque 2 de `scripts/priorizar.py`.
+- [ ] Abrir el PR `i/b2-caracterizacion`.
+- **Listo cuando:** con `predicciones_base.csv` el decil 1 captura 56 de 112 y existe la frase "contactando al 20 % de mayor riesgo se captura X %" (referencia: 76.8 %).
 
 ### Juanes
 
-**Sesión 1 · partición y logística (2.5 h)**
+**Sesión 1 · partición, logística y métricas (3 h, martes 3)**
 
-- [ ] En `src/churn/modelos.py`, `particion(df)`: entrenamiento/prueba estratificado por `churn`, 25 % de prueba, semilla 42; guardar `data/processed/particion.csv`.
-- [ ] `entrenar("logistica", X, y)`: `StandardScaler` + `LogisticRegression` en un `Pipeline`, con las variables acordadas el sábado.
-- **Listo cuando:** 2137 clientes en entrenamiento y 713 en prueba, con 112 que abandonan en prueba.
+- [ ] En `src/churn/modelos.py`: `particion(df)` y `entrenar("logistica", X, y)` (`StandardScaler` + `LogisticRegression` en un `Pipeline`). En `evaluacion.py`: `metricas(y, prob, umbral)`.
+- [ ] Completar `scripts/entrenar.py` y generar `predicciones_base.csv`. **Subirlo a la rama esa noche o el miércoles.**
+- **Listo cuando:** 2137 en entrenamiento y 713 en prueba con 112 abandonos, AUC-ROC de la logística ≈ 0.933 y pasan las pruebas de partición, métricas, AUC y contrato.
 
-**Sesión 2 · evaluación (2.5 h)**
+**Sesión 2 · comparar modelos (2.5 h, miércoles 4 o jueves 5)**
 
-- [ ] En `src/churn/evaluacion.py`, `metricas(y, prob, umbral)`: AUC-ROC, AUC-PR, recall, precisión, F1, falsos positivos y falsos negativos.
-- [ ] Curva ROC y curva precisión-recall en `reports/figures/`.
-- **Listo cuando:** la logística da un AUC-ROC cercano a 0.93 en prueba (como referencia, con todas las variables menos `grupo_edad` da 0.933).
+- [ ] Agregar a `entrenar()`: árbol (profundidad 3–4) y bosque aleatorio. Boosting es **opcional**.
+- [ ] `comparar_modelos()`: validación cruzada de 5 pliegues **solo sobre entrenamiento** → `reports/tablas/comparacion_modelos.csv`.
+- [ ] Curvas ROC y precisión-recall de prueba → `reports/figures/`.
+- **Listo cuando:** la tabla tiene los modelos con media y desviación y pasa `test_comparar_modelos`.
 
-**Sesión 3 · predicciones base (2.5 h)**
+**Sesión 3 · ¿en qué medida? y modelo final (2.5 h, viernes 6)**
 
-- [ ] `scripts/entrenar.py`: corre partición, logística y escribe `data/processed/predicciones_base.csv` con el formato del contrato.
-- [ ] `tests/test_modelos.py`: la partición mantiene la proporción de churn, ningún cliente aparece en los dos conjuntos y el AUC de prueba es ≥ 0.90.
-- [ ] Primera parte de `notebooks/04_modelos_J.ipynb`.
-- [ ] Abrir el PR `j/s2-modelo-base`.
-- **Listo cuando:** `predicciones_base.csv` tiene 713 filas y las columnas del contrato.
+- [ ] Repetir el mejor modelo y la logística con `VARIABLES_MODELO`, `VARIABLES_SIN_ESTADO_QUEJAS` y `VARIABLES_SOLO_USO` → `reports/tablas/sensibilidad_variables.csv` (referencia: la logística sin `estado` ni `quejas` baja a ≈ 0.85).
+- [ ] Proponer el modelo final con un criterio escrito (sugerido: AUC-PR y recall, desempatando por facilidad de explicar) y generar `predicciones_final.csv` con `python scripts/entrenar.py --final --modelo <nombre>`. **Subirlo antes del sábado al mediodía.**
+- [ ] Dos líneas en `docs/hallazgos.md` sobre la sensibilidad.
+- [ ] Abrir el PR `j/b2-modelos`.
+- **Listo cuando:** la sensibilidad está en la tabla y `predicciones_final.csv` cumple el contrato.
 
-**Cierre de la semana 2 · sábado 24 (1 h):** se fusionan los dos PR y se etiqueta `s2`. Se decide **cuánto cuesta equivocarse**: en lugar de inventar pesos, se expresa como "un falso negativo cuesta k veces un falso positivo" y se acuerda probar k = 2, 5 y 10. Se anota en `config.py` y en `docs/decisiones.md`.
+**Reunión 2 · sábado 7 de noviembre (1.5 h):** se fusionan los dos PR y se etiqueta `s2`. Se decide el costo de equivocarse (un falso negativo cuesta k falsos positivos, probando k = 2, 5 y 10) y el modelo final. Se reparte el informe: Ianis secciones 1, 2, 4 y 6; Juanes 3, 5 y 7; la 8 y la 9 juntos.
 
 ---
 
-## Semana 3 · 26 al 31 de octubre · Comparación de modelos y priorización
+## Bloque 3 · domingo 8 al martes 10 de noviembre · Cierre de cifras
 
-**Objetivo de la semana:** responder "¿en qué medida?" (qué tan bien se predice y con qué variables) y convertir el modelo en una lista de prioridades para el equipo de retención. Al cierre, las cifras se congelan.
-
-### Juanes
-
-**Sesión 1 · comparar modelos (3 h)**
-
-- [ ] Agregar a `entrenar()`: árbol de decisión (profundidad 3–4, para poder leerlo), bosque aleatorio y boosting (`HistGradientBoostingClassifier`; LightGBM opcional, como en Arai et al., 2023).
-- [ ] Validación cruzada estratificada de 5 pliegues **solo sobre entrenamiento**: AUC-ROC, AUC-PR y recall, con media ± desviación.
-- [ ] Guardar `reports/tablas/comparacion_modelos.csv`.
-- **Listo cuando:** la tabla tiene los 4 modelos con media y desviación.
-
-**Sesión 2 · ¿en qué medida? (2.5 h)**
-
-- [ ] Repetir el mejor modelo y la logística con tres conjuntos de variables: (a) todas las acordadas, (b) sin `estado` ni `quejas`, (c) solo las de uso.
-- [ ] Guardar `reports/tablas/sensibilidad_variables.csv` y escribir dos líneas en `docs/hallazgos.md`.
-- **Listo cuando:** la tabla existe (referencia: la logística sin `estado` ni `quejas` baja a un AUC cercano a 0.85).
-
-**Sesión 3 · interpretar y elegir (2.5 h)**
-
-- [ ] Razones de momios (odds ratios) de la logística e importancia por permutación del mejor modelo; figura `reports/figures/importancia.png`.
-- [ ] Dibujar el árbol en `reports/figures/arbol.png` (sirve para explicarle al equipo de retención reglas simples).
-- [ ] Elegir el modelo final con un criterio escrito en `docs/decisiones.md` (sugerido: AUC-PR y recall, desempatando por facilidad de explicar).
-- [ ] `scripts/entrenar.py` escribe `data/processed/predicciones_final.csv`. **Subirlo a la rama a más tardar el jueves** para que Ianis lo use.
-- [ ] Abrir el PR `j/s3-modelos`.
-- **Listo cuando:** el modelo final está elegido y su archivo de predicciones cumple el contrato.
+**Objetivo:** priorización final, interpretación del modelo e inicio del informe. El martes las cifras se congelan.
 
 ### Ianis
 
-**Sesión 1 · deciles de riesgo (2.5 h)**
+**Sesión 1 · costos y perfil del grupo prioritario (2.5 h, domingo 8)**
 
-- [ ] En `src/churn/priorizacion.py`, `tabla_deciles(pred)`: ordenar por `prob_churn`, partir en 10 deciles y calcular n, abandonos reales, tasa, lift y % acumulado de abandonos capturados.
-- [ ] Probarlo con el fixture y luego con `predicciones_base.csv`.
-- [ ] `scripts/priorizar.py --predicciones <archivo>` que escribe las tablas en `reports/tablas/`.
-- **Listo cuando:** con `predicciones_base.csv`, el 10 % de mayor riesgo captura cerca de la mitad de quienes abandonan (referencia: 56 de 112).
+- [ ] `costo_por_umbral(pred, costo_fn=k, costo_fp=1)` para cada k de `config.K_COSTOS`; figura del costo según el umbral y curva de ganancia acumulada.
+- [ ] Con `tabla_numericas` y `tabla_categoricas`, comparar el 20 % de mayor riesgo contra el resto.
+- [ ] Volver a correr todo con `predicciones_final.csv`; `notebooks/05_priorizacion_I.ipynb` con la tabla final para el equipo de retención.
+- **Listo cuando:** las tablas y figuras de priorización usan `predicciones_final.csv` y pasan las 4 pruebas de `test_priorizacion.py`.
 
-**Sesión 2 · capacidad y costos (2.5 h)**
+**Sesión 2 · informe, primera parte (2 h, lunes 9)**
 
-- [ ] `capacidad(pred)`: si el equipo solo puede contactar al 10 %, 20 % o 30 % de mayor riesgo, cuántos abandonos captura y con qué precisión.
-- [ ] `costo_por_umbral(pred, costo_fn, costo_fp)` con k = 2, 5 y 10; figura del costo según el umbral y curva de ganancia acumulada.
-- **Listo cuando:** existe la frase "contactando al 20 % de mayor riesgo se captura X % de quienes abandonan" (referencia con la logística base: unos 77 %).
+- [ ] Secciones 1 (actualizar planteamiento, pregunta y objetivos desde `docs/primera_entrega.md`) y 2 (datos y calidad) en `reports/informe_final.md`.
+- [ ] Abrir el PR `i/b3-cierre`.
 
-**Sesión 3 · perfil del grupo prioritario (2.5 h)**
+### Juanes
 
-- [ ] Con las funciones de la semana 2, comparar el 20 % de mayor riesgo contra el resto.
-- [ ] `notebooks/05_priorizacion_I.ipynb` con una tabla final pensada para el equipo de retención.
-- [ ] `tests/test_priorizacion.py`: los deciles suman 713 y el % acumulado termina en 100 %.
-- [ ] Volver a correr todo con `predicciones_final.csv` de Juanes.
-- [ ] Abrir el PR `i/s3-priorizacion`.
-- **Listo cuando:** las tablas y figuras usan `predicciones_final.csv`.
+**Sesión 1 · interpretar (2.5 h, domingo 8)**
 
-**Cierre de la semana 3 · sábado 31 (1.5 h):** se fusionan los dos PR. Uno de los dos borra `data/processed/`, corre todo desde cero (`preparar_datos.py` → `entrenar.py` → `priorizar.py`) y `pytest -q`. Si las cifras coinciden, se etiqueta `s3` = **cifras congeladas**. Se completa `docs/hallazgos.md` y se reparte la presentación.
+- [ ] Razones de momios de la logística e importancia por permutación del modelo final → `reports/figures/importancia.png`.
+- [ ] Dibujar el árbol → `reports/figures/arbol.png` (si no alcanza el tiempo, se corta).
+- [ ] README final con las instrucciones para reproducir todo.
+- **Listo cuando:** la figura de importancia existe y el README explica los scripts.
 
-**Si van atrasados:** lo indispensable es la base limpia, el objetivo 1 (correlaciones), el objetivo 2 (caracterización), la logística y la tabla de deciles. El boosting, la sensibilidad por costos y el árbol dibujado son mejoras: se cortan primero.
+**Sesión 2 · informe, primera parte (2 h, lunes 9)**
+
+- [ ] Sección 3 (metodología: partición, validación cruzada, variables y por qué, citando `docs/decisiones.md`).
+- [ ] Abrir el PR `j/b3-cierre`.
+
+**Reunión 3 · martes 10 de noviembre (1.5 h):** se fusionan los dos PR. Uno de los dos borra `data/processed/` (menos `fixtures/`), corre todo desde cero (`preparar_datos.py` → `entrenar.py` → `entrenar.py --final --modelo <nombre>` → `priorizar.py --predicciones data/processed/predicciones_final.csv`) y `pytest -q -rs`. Si las cifras coinciden y hay **0 skipped**, se etiqueta `s3` = **cifras congeladas**. Se completa `docs/hallazgos.md`.
+
+**Si van atrasados**, lo indispensable es: base limpia, objetivo 1 (correlaciones), objetivo 2 (caracterización), logística y tablas de deciles y capacidad. Se cortan primero, en este orden: boosting, árbol dibujado, curva de costos por k, perfil del grupo prioritario, bosque aleatorio.
 
 ---
 
-## Semana 4 · 3 al 6 de noviembre · Informe, presentación y entrega
+## Bloque 4 · miércoles 11 al viernes 13 de noviembre · Informe, presentación y entrega
 
-**Objetivo de la semana:** escribir sobre cifras congeladas, sin código nuevo (solo correcciones). Los dos parten de `s3`.
+**Objetivo:** escribir sobre cifras congeladas, sin código nuevo (solo correcciones). Los dos parten de `s3`.
 
-### Ianis
+### Miércoles 11
 
-**Sesión 1 · informe, primera parte (2.5 h, martes 3)**
+- [ ] **Ianis (2.5 h):** secciones 4 (caracterización) y 6 (priorización).
+- [ ] **Juanes (2.5 h):** secciones 5 (relación y modelos) y 7 (falsos positivos, falsos negativos y privacidad).
+- [ ] **Los dos (1 h, en llamada, en la noche):** secciones 8 (conclusiones: respuesta directa a la pregunta con dos o tres cifras) y 9 (limitaciones). Cada quien revisa las secciones del otro comparando cada número con `reports/tablas/` y comenta en el PR.
+- **Listo cuando:** el informe está completo y cada cifra tiene respaldo.
 
-- [ ] En `reports/informe_final.md`: sección 1 (actualizar planteamiento, pregunta y objetivos de la primera entrega), sección 2 (datos y calidad) y sección 4 (caracterización).
-- **Listo cuando:** cada cifra de sus secciones está en `reports/tablas/` o en `docs/hallazgos.md`.
+### Jueves 12
 
-**Sesión 2 · informe, segunda parte (2.5 h, miércoles 4)**
-
-- [ ] Sección 6 (priorización) y su parte de limitaciones.
-- [ ] Revisar las secciones de Juanes: comparar cada número con las tablas y comentar en el PR.
-- **Listo cuando:** sus secciones están completas y la revisión cruzada está hecha.
-
-**Sesión 3 · presentación y formato (2.5 h, jueves 5)**
-
-- [ ] Diapositivas: contexto y pregunta, datos, caracterización, priorización (la mitad).
-- [ ] Exportar el informe a Word o PDF (`pandoc reports/informe_final.md -o informe_final.docx`) y darle el formato que pida la profesora (APA 7).
-- **Listo cuando:** sus diapositivas y el documento exportado están en `presentacion/` y `reports/`.
-
-### Juanes
-
-**Sesión 1 · informe, primera parte (2.5 h, martes 3)**
-
-- [ ] Sección 3 (metodología: partición, validación cruzada, variables y por qué, citando `docs/decisiones.md`) y sección 5 (relación y modelos).
-- **Listo cuando:** cada cifra de sus secciones está en `reports/tablas/`.
-
-**Sesión 2 · informe, segunda parte (2.5 h, miércoles 4)**
-
-- [ ] Sección 7 (falsos positivos, falsos negativos y privacidad) y su parte de limitaciones.
-- [ ] Revisar las secciones de Ianis como en su sesión 2.
-- [ ] README final con instrucciones para reproducir todo.
-- **Listo cuando:** sus secciones están completas y la revisión cruzada está hecha.
-
-**Sesión 3 · presentación y reproducibilidad (2.5 h, jueves 5)**
-
-- [ ] Diapositivas: modelos, "¿en qué medida?", riesgos y recomendación (la otra mitad).
-- [ ] En una carpeta nueva: clonar `main`, instalar, correr los tres scripts y `pytest -q`.
-- **Listo cuando:** el proyecto se reproduce desde cero en otro lugar sin errores.
-
-### Los dos
-
-- [ ] **Miércoles 4 (1 h, en llamada):** escribir juntos la sección 8 (conclusiones): una respuesta directa a la pregunta de investigación, con dos o tres cifras.
-- [ ] **Jueves 5 (1.5 h, en llamada) · cierre final:** ensayar la presentación cronometrada, fusionar los últimos PR y recorrer esta lista:
-  - [ ] `pytest -q` en verde en `main`.
+- [ ] **Ianis (2 h):** sus diapositivas (contexto, pregunta, datos, caracterización, priorización; ver `presentacion/README.md`) y exportar el informe (`pandoc reports/informe_final.md -o informe_final.docx`) con formato APA 7.
+- [ ] **Juanes (2 h):** sus diapositivas (relación, modelos, "¿en qué medida?", riesgos, referencias) y prueba de reproducibilidad: en una carpeta nueva clonar `main`, instalar, correr los scripts y `pytest -q`.
+- [ ] **Los dos (1.5 h, en llamada) · cierre final:** ensayar la presentación cronometrada y recorrer esta lista:
+  - [ ] `pytest -q` en verde en `main`, 0 skipped.
   - [ ] Cada cifra del informe y de las diapositivas coincide con `reports/tablas/`.
   - [ ] El informe responde la pregunta y los dos objetivos específicos.
-  - [ ] Referencias en APA 7 (como mínimo, las dos de la primera entrega).
+  - [ ] Referencias en APA 7 (como mínimo las dos de la primera entrega).
   - [ ] Se etiqueta `v1.0`.
-- [ ] **Viernes 6 · entrega:** subir el informe y la presentación por el canal que indique la profesora (y el enlace al repositorio si lo piden).
+
+### Viernes 13 · presentación
+
+- [ ] Presentar y subir el informe y las diapositivas por el canal que indique la profesora (y el enlace al repositorio si lo piden).

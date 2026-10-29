@@ -1,7 +1,7 @@
 """Carga de datos.
 
 - cargar_crudo(): YA FUNCIONA. Lee el CSV original tal cual (3150 filas).
-- cargar_limpio(): dueña Ianis (Semana 1). Lee data/processed/clientes.csv.
+- cargar_limpio(): dueña Ianis (bloque 1). Lee data/processed/clientes.csv.
 """
 import pandas as pd
 
@@ -21,6 +21,10 @@ def cargar_crudo(ruta=config.DATA_RAW) -> pd.DataFrame:
 
 
 def cargar_limpio(ruta=config.DATA_PROCESADA) -> pd.DataFrame:
-    """TODO (Ianis, Semana 1): leer data/processed/clientes.csv generado por
-    scripts/preparar_datos.py y devolverlo con los tipos correctos."""
-    raise NotImplementedError("Lo implementa Ianis en la Semana 1")
+    """TODO (Ianis, bloque 1): leer data/processed/clientes.csv generado por
+    scripts/preparar_datos.py y devolverlo con los tipos correctos.
+
+    Debe devolver 2850 filas. Si el archivo no existe, lanzar FileNotFoundError
+    con un mensaje que diga que primero hay que correr scripts/preparar_datos.py.
+    """
+    raise NotImplementedError("Lo implementa Ianis en el bloque 1")

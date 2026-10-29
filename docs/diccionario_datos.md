@@ -29,4 +29,4 @@ Las variables corresponden a los **primeros 9 meses**; `churn` es el estado al *
 - Tasa de churn: 15.7 % en la base completa; 15.6 % (446 de 2850) sin duplicados.
 - `edad` y `grupo_edad` son la misma información (cada grupo corresponde a una sola edad).
 - 107 clientes únicos tienen `segundos_uso = 0`.
-- `valor_cliente` se deriva del uso: revisar si aporta algo distinto (Juanes, Semana 1).
+- `valor_cliente` se deriva del uso: revisar si aporta algo distinto (Juanes, bloque 1).
