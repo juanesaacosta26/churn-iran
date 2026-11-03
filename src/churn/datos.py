@@ -21,10 +21,19 @@ def cargar_crudo(ruta=config.DATA_RAW) -> pd.DataFrame:
 
 
 def cargar_limpio(ruta=config.DATA_PROCESADA) -> pd.DataFrame:
-    """TODO (Ianis, bloque 1): leer data/processed/clientes.csv generado por
-    scripts/preparar_datos.py y devolverlo con los tipos correctos.
+    """Lee la base limpia y devuelve los datos con los tipos correctos."""
 
-    Debe devolver 2850 filas. Si el archivo no existe, lanzar FileNotFoundError
-    con un mensaje que diga que primero hay que correr scripts/preparar_datos.py.
-    """
-    raise NotImplementedError("Lo implementa Ianis en el bloque 1")
+    if not ruta.exists():
+        raise FileNotFoundError(
+            "No se encontró clientes.csv. "
+            "Primero debes correr scripts/preparar_datos.py."
+        )
+
+    df = pd.read_csv(ruta)
+
+    if len(df) != 2850:
+        raise ValueError(
+            f"La base limpia debe tener 2850 filas, pero tiene {len(df)}."
+        )
+
+    return df

@@ -30,3 +30,11 @@ Las variables corresponden a los **primeros 9 meses**; `churn` es el estado al *
 - `edad` y `grupo_edad` son la misma información (cada grupo corresponde a una sola edad).
 - 107 clientes únicos tienen `segundos_uso = 0`.
 - `valor_cliente` se deriva del uso: revisar si aporta algo distinto (Juanes, bloque 1).
+
+## Diferencia entre la base original y la base procesada
+
+La base original contiene 3150 registros y 14 variables provenientes del conjunto de datos. Al cargarla mediante `cargar_crudo()`, se agrega la columna `fila_original`, que permite identificar la posición de cada registro.
+
+Durante la preparación de los datos se eliminaron 300 registros duplicados, comparando las variables originales sin incluir `fila_original`. También se retiró `grupo_edad`, según la configuración del proyecto.
+
+Como resultado, la base procesada contiene 2850 registros y 14 columnas, incluyendo `fila_original`. Esta es la versión que se utiliza para los análisis posteriores.

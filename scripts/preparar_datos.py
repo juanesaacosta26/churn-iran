@@ -1,24 +1,53 @@
-"""Genera data/processed/clientes.csv a partir del CSV original.
 
-Dueña: Ianis (bloque 1). Correr con:  python scripts/preparar_datos.py
-"""
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))  # para no tener que fijar PYTHONPATH
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from churn import config  # noqa: E402
-from churn.datos import cargar_crudo  # noqa: E402
+from churn import config
+from churn.datos import cargar_crudo
 
 
 def main():
+
+    # 1. Cargar los datos originales
     df = cargar_crudo()
-    # TODO 1: contar y quitar filas duplicadas exactas (sin contar fila_original); deben ser 300
-    # TODO 2: quitar config.COLUMNA_EDAD_A_QUITAR (decisión del arranque, docs/decisiones.md)
-    # TODO 3: revisar rangos raros y documentarlos en docs/calidad_datos.md
-    # TODO 4: guardar en config.DATA_PROCESADA (index=False)
-    raise NotImplementedError
+
+    print("Dimensiones originales:", df.shape)
+
+    # 2. Identificar duplicados sin tener en cuenta fila_original
+    columnas_comparar = df.columns.drop("fila_original")
+
+    duplicados = df.duplicated(
+        subset=columnas_comparar
+    ).sum()
+
+    print("Duplicados encontrados:", duplicados)
+
+    # 3. Eliminar duplicados, conservando la primera aparición
+    df = df.drop_duplicates(
+        subset=columnas_comparar,
+        keep="first"
+    )
+
+    # 4. Eliminar la columna definida en config.py
+    df = df.drop(columns=[config.COLUMNA_EDAD_A_QUITAR])
+
+    # 5. Mostrar las dimensiones finales
+    print("Dimensiones después de limpiar:", df.shape)
+
+    # 6. Crear la carpeta de destino si no existe
+    config.DATA_PROCESADA.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    # 7. Guardar los datos procesados
+    df.to_csv(config.DATA_PROCESADA, index=False)
+
+    print("Archivo guardado en:", config.DATA_PROCESADA)
 
 
 if __name__ == "__main__":
     main()
+
