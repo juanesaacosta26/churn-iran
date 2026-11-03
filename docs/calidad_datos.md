@@ -1,39 +1,38 @@
 # Calidad de los datos
 
-## 1. Descripción de la base de datos
+## Resumen de la base procesada
 
-El proyecto utiliza el conjunto de datos *Iranian Churn Dataset*, disponible en el repositorio UCI Machine Learning Repository. La base contiene información de 3150 clientes de una empresa de telecomunicaciones iraní y permite analizar las características relacionadas con el abandono del servicio.
+- Total de clientes: 2850.
+- Total de variables: 14.
+- Valores faltantes: 0.
+- Registros duplicados: 0.
 
-La unidad de análisis es el cliente y la variable objetivo es `churn`, que identifica si el cliente abandonó el servicio (1) o permaneció activo (0).
+## Estadísticas por variable numérica
 
-## 2. Revisión inicial
+Los valores atípicos se identificaron utilizando el criterio de 1.5 × IQR.
 
-La base original contiene 3150 registros y 15 columnas, incluyendo `fila_original`, que se utiliza para identificar la posición de cada registro en el archivo original.
+| Variable            |   Mínimo |   Percentil 5 |   Mediana |   Percentil 95 |   Máximo |   Cantidad de ceros |   Valores atípicos |
+|:--------------------|---------:|--------------:|----------:|---------------:|---------:|--------------------:|-------------------:|
+| fallas_llamada      |        0 |        0      |      6    |          23    |    36    |                 609 |                 44 |
+| quejas              |        0 |        0      |      0    |           1    |     1    |                2620 |                230 |
+| meses_suscripcion   |        3 |       13      |     35    |          42    |    47    |                   0 |                208 |
+| nivel_cobro         |        0 |        0      |      0    |           4    |    10    |                1575 |                 62 |
+| segundos_uso        |        0 |      267.5    |   3041    |       15044.2  | 17090    |                 107 |                189 |
+| frecuencia_llamadas |        0 |        4      |     54.5  |         185    |   255    |                 107 |                118 |
+| frecuencia_sms      |        0 |        0      |     22    |         356    |   522    |                 522 |                333 |
+| numeros_distintos   |        0 |        2      |     21    |          52    |    97    |                 107 |                 82 |
+| plan_tarifa         |        1 |        1      |      1    |           2    |     2    |                   0 |                229 |
+| estado              |        1 |        1      |      1    |           2    |     2    |                   0 |                684 |
+| edad                |       15 |       25      |     30    |          55    |    55    |                   0 |                633 |
+| valor_cliente       |        0 |       17.7345 |    232.52 |        1592.48 |  2165.28 |                  85 |                104 |
+| churn               |        0 |        0      |      0    |           1    |     1    |                2404 |                446 |
 
-Durante la revisión se verificó la estructura de los datos, los nombres de las columnas, la presencia de valores faltantes y los valores de la variable objetivo.
+## Clientes con cero segundos de uso
 
-## 3. Proceso de limpieza
+- Clientes con segundos_uso = 0: 107.
+- De ellos, clientes que abandonaron: 56.
+- Porcentaje de abandono en este grupo: 52.34%.
 
-Para preparar los datos se realizaron las siguientes operaciones:
+## Interpretación
 
-- **Identificación de duplicados:** se encontraron 300 registros duplicados. Para identificarlos, se compararon todas las columnas excepto `fila_original`, ya que esta última funciona como identificador de la posición original.
-- **Eliminación de duplicados:** se conservaron los primeros registros y se eliminaron las repeticiones.
-- **Eliminación de `grupo_edad`:** se retiró esta columna de acuerdo con la configuración definida para el proyecto. Esto debido a que tanto `edad` como `grupo_edad` contienen misma información del mismo contexto.
-- **Conservación de los registros restantes:** después de la limpieza quedaron 2850 clientes.
-
-## 4. Resultado de la limpieza
-
-| Indicador | Resultado |
-|---|---:|
-| Registros originales | 3150 |
-| Registros duplicados eliminados | 300 |
-| Registros finales | 2850 |
-| Columna eliminada | `grupo_edad` |
-
-La base limpia se guarda en `data/processed/clientes.csv` y se carga mediante la función `cargar_limpio()` del módulo `src/churn/datos.py`.
-
-## 5. Consideraciones
-
-La columna `fila_original` se conserva como identificador del registro y no representa una característica de comportamiento del cliente.
-
-La limpieza busca disponer de una base consistente para los análisis posteriores. No implica que las relaciones encontradas entre las variables y el abandono sean causales.
+De los 107 clientes que no registraron segundos de uso, 56 abandonaron el servicio, lo que representa el 52.34% de este grupo. Esto indica que más de la mitad de los clientes sin uso registrado terminaron abandonando. Por esta razón, la variable `segundos_uso` puede ser una señal importante para identificar clientes que podrían estar en riesgo de abandono. Sin embargo, este resultado muestra una relación entre las variables y no significa que la falta de uso sea necesariamente la causa del abandono.
