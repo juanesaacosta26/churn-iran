@@ -74,3 +74,10 @@ En conclusión, los resultados muestran que el abandono está asociado con difer
 También se encontró que la frecuencia de llamadas, los números distintos contactados y la frecuencia de SMS presentan diferencias estadísticamente significativas entre quienes abandonan y quienes permanecen, a diferencia de los meses de suscripción y las fallas en llamadas que no mostraron diferencias estadísticamente significativas en esta comparación.
 
 Estos resultados permiten reconocer características que podrían aportar información para identificar clientes con mayor riesgo de abandono. Sin embargo, la caracterización por sí sola no permite establecer qué clientes abandonarán en el futuro. Por ello, estos hallazgos servirán como base para la siguiente etapa del proyecto: evaluar la capacidad de los modelos predictivos para identificar y priorizar anticipadamente a los clientes que requieren acciones de retención.
+
+## Hallazgos de relación entre variables
+
+| # | Hallazgo | Cifra | Respaldo | Autor |
+|---|---|---|---|---|
+| 1 | Las quejas y el estado no activo son las señales más relacionadas con el abandono; las fallas de llamada casi no presentan relación. | Con queja abandona el 83 % frente al 10 % sin queja (r = 0,53); clientes no activos, 47 % frente al 5 % de activos (r = 0,50); fallas de llamada r = -0,01. Base: 3150 filas. | `reports/tablas/relacion_churn.csv`, `reports/tablas/tasa_por_categoria.csv`, notebook 03. | Juanes |
+| 2 | Algunos pares de variables contienen información muy similar, por lo que conviene revisar su uso conjunto en la regresión logística. | `segundos_uso`–`frecuencia_llamadas`: r = 0,95; `frecuencia_sms`–`valor_cliente`: r = 0,92; `valor_cliente` presenta VIF = 56 y R² = 0,98 frente al resto. | `reports/figures/correlaciones.png`, `reports/tablas/redundancias.csv`, `reports/tablas/vif.csv`. | Juanes |
