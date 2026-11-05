@@ -1,0 +1,38 @@
+{
+  "bosque": {
+    "C1_auc_pr_prueba": 0.9067192977333818,
+    "C1_cumple": true,
+    "C2_ventaja_vs_R2_pp": 8.92857142857143,
+    "C2_ventaja_vs_R1_pp": 7.142857142857145,
+    "C2_cumple": true,
+    "C3_auc_pr_sin_estado_quejas": 0.8038049259269995,
+    "C3_cumple": true,
+    "C4_desv_pliegues": 0.048337666521765944,
+    "C4_dif_cv_prueba": 0.012803270658622745,
+    "C4_cumple": true
+  },
+  "logistica": {
+    "C1_auc_pr_prueba": 0.7672848424555221,
+    "C1_cumple": true,
+    "C2_ventaja_vs_R2_pp": -0.8928571428571508,
+    "C2_ventaja_vs_R1_pp": 0.0,
+    "C2_cumple": false,
+    "C3_auc_pr_sin_estado_quejas": 0.4608397397933404,
+    "C3_cumple": true,
+    "C4_desv_pliegues": 0.04568927100673431,
+    "C4_dif_cv_prueba": 0.026403308747229515,
+    "C4_cumple": true
+  },
+  "logistica_bayesiana": {
+    "C1_auc_pr_prueba": 0.7648449680121718,
+    "C1_cumple": true,
+    "C2_ventaja_vs_R2_pp": -0.8928571428571508,
+    "C2_ventaja_vs_R1_pp": 0.0,
+    "C2_cumple": false
+  },
+  "eleccion": {
+    "mayor_auc_pr_cv": "bosque",
+    "diferencia_con_logistica": 0.15303449336646646,
+    "propuesto": "bosque"
+  }
+}

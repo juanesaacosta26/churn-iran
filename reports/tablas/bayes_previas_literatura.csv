@@ -1,0 +1,12 @@
+parametro,media_beta,desv_beta,implica_95,evidencia,fuente
+intercepto (cliente con variables en su promedio),0.0,2.5,"débilmente informativa: Normal(0, 2.5); riesgo entre 0.7% y 99.3%","No se transfiere: las tasas del sector (17–20 %/año en Corea; ≈ 22 %/año pospago; 37–80 %/año prepago emergente) son promedios, no el riesgo del cliente promedio. Se usan como contraste de la tasa simulada por el modelo.","Ahn, Han y Lee (2006); Ovum vía RCR Wireless (2014); Strategy Analytics vía Capacity"
+fallas_llamada,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+quejas,0.54,1.0,OR con queja frente a sin queja: 1.72 (0.24 a 12.18),"Cada queja: β = 0.538 (EE 0.323), OR ≈ 1.7 (p < 0.10), operador coreano. Aquí la variable es 'alguna queja' (0/1), no un conteo; por eso la desviación triplica el EE.","Ahn, Han y Lee (2006)"
+segundos_uso,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+frecuencia_sms,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+numeros_distintos,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+meses_suscripcion,-0.027,0.03,OR por cada 6 meses más de suscripción: 0.85 (0.60 a 1.21),"Cada mes de antigüedad: B = −0.027, Exp(B) = 0.974 (Wald 105.6, EE ≈ 0.003), operador del Reino Unido. Desviación ≈ 10 veces el EE.",Customer Churn in Mobile Markets: A Comparison of Techniques (arXiv:1607.07792)
+nivel_cobro,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+plan_tarifa,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
+estado,1.46,1.0,OR no activo frente a activo: 4.31 (0.61 a 30.57),"Estado 'sin uso' frente a activo: β = 1.455 (EE 0.349), OR ≈ 4.3, operador coreano.","Ahn, Han y Lee (2006), tabla de la logística con estado"
+edad,0.0,,"débilmente informativa: Normal(0, 2.5) por desviación estándar",Sin evidencia transferible (otras unidades o variables).,Gelman et al. (2008)
