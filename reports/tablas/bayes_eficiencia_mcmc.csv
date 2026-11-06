@@ -1,0 +1,3 @@
+metodo,n_eff_N_min,rhat_max,segundos
+HMC (usado),0.549004047673569,1.0031027388250475,29.3
+Metropolis de paseo aleatorio,0.019749619931941846,1.0283768536107454,2.8
