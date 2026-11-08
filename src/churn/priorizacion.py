@@ -71,13 +71,44 @@ def tabla_deciles(pred: pd.DataFrame) -> pd.DataFrame:
     return tabla[columnas]
 
 
-def costo_por_umbral(pred: pd.DataFrame, costo_fn: float, costo_fp: float) -> pd.DataFrame:
-    """Para umbrales de 0.05 a 0.95: FP, FN y costo total = FN*costo_fn + FP*costo_fp.
-
-    Columnas: umbral, falsos_positivos, falsos_negativos, costo.
-    Con k de config.K_COSTOS: costo_fn = k, costo_fp = 1.
+def costo_por_umbral(
+    pred: pd.DataFrame,
+    costo_fn: float,
+    costo_fp: float
+) -> pd.DataFrame:
+    """Calcula los falsos positivos, falsos negativos y costo total
+    para umbrales entre 0.05 y 0.95.
     """
-    raise NotImplementedError
+    resultados = []
+
+    for umbral in [i / 100 for i in range(5, 100, 5)]:
+
+        # Clasificar clientes según su probabilidad de abandono.
+        predicho = pred["prob_churn"] >= umbral
+
+        # Identificar los errores de clasificación.
+        falsos_positivos = (
+            (predicho) & (pred["churn_real"] == 0)
+        ).sum()
+
+        falsos_negativos = (
+            (~predicho) & (pred["churn_real"] == 1)
+        ).sum()
+
+        # Calcular el costo total.
+        costo = (
+            falsos_negativos * costo_fn
+            + falsos_positivos * costo_fp
+        )
+
+        resultados.append({
+            "umbral": umbral,
+            "falsos_positivos": falsos_positivos,
+            "falsos_negativos": falsos_negativos,
+            "costo": costo
+        })
+
+    return pd.DataFrame(resultados)
 
 
 def capacidad(pred: pd.DataFrame, porcentajes=(0.10, 0.20, 0.30)) -> pd.DataFrame:
@@ -127,3 +158,71 @@ def capacidad(pred: pd.DataFrame, porcentajes=(0.10, 0.20, 0.30)) -> pd.DataFram
         })
 
     return pd.DataFrame(resultados)
+
+
+
+def comparar_grupo_prioritario(
+    pred: pd.DataFrame,
+    clientes: pd.DataFrame,
+    proporcion: float = 0.20
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compara las características del grupo de mayor riesgo
+    frente al resto de clientes.
+    """
+
+    from churn.caracterizacion import (
+        tabla_numericas,
+        tabla_categoricas
+    )
+
+    if not 0 < proporcion < 1:
+        raise ValueError("La proporción debe estar entre 0 y 1.")
+
+    # Ordenar clientes según su probabilidad de abandono.
+    ordenado = pred.sort_values(
+        "prob_churn",
+        ascending=False
+    ).reset_index(drop=True).copy()
+
+    # Identificar el grupo de mayor riesgo.
+    total = len(ordenado)
+    cantidad_prioritaria = round(proporcion * total)
+
+    ordenado["grupo_prioritario"] = 0
+    ordenado.loc[:cantidad_prioritaria - 1, "grupo_prioritario"] = 1
+
+    # Unir las predicciones con las características de los clientes.
+    grupos = ordenado[
+        ["fila_original", "grupo_prioritario"]
+    ].merge(
+        clientes,
+        on="fila_original",
+        how="inner",
+        validate="one_to_one"
+    )
+
+    # Crear una copia y utilizar churn como indicador del grupo.
+    # 1 = mayor riesgo; 0 = resto de clientes.
+    perfil = grupos.drop(columns="grupo_prioritario").copy()
+    perfil["churn"] = grupos["grupo_prioritario"].values
+
+    # Comparar variables numéricas y categóricas.
+    numericas = tabla_numericas(perfil)
+    categoricas = tabla_categoricas(perfil)
+
+    # Cambiar los nombres para reflejar que se comparan grupos de riesgo.
+    numericas = numericas.rename(columns={
+        "mediana_abandona": "mediana_alto_riesgo",
+        "q1_abandona": "q1_alto_riesgo",
+        "q3_abandona": "q3_alto_riesgo",
+        "mediana_permanece": "mediana_restantes",
+        "q1_permanece": "q1_restantes",
+        "q3_permanece": "q3_restantes"
+    })
+
+    categoricas = categoricas.rename(columns={
+        "tasa_churn": "proporcion_alto_riesgo"
+    })
+
+    return numericas, categoricas
+
