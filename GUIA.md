@@ -2,6 +2,10 @@
 
 Octubre 28, 2026 · Ianis y Juanes
 
+> **Cambio de fechas (noviembre 8):** el informe y el repositorio se entregan el **lunes 9 de noviembre**
+> para recibir retroalimentación; la presentación sigue el viernes 13. El cierre de cifras (etiqueta `s3`)
+> y el informe se adelantan al domingo 8; los días 10 a 13 quedan para ajustes y la presentación.
+
 ## Qué cambió
 
 Esta versión reemplaza la guía del 10 de octubre: el trabajo en el repositorio no había empezado y **la presentación es el viernes 13 de noviembre**. Quedan 15 días, así que las cuatro semanas se comprimen en cuatro bloques:
