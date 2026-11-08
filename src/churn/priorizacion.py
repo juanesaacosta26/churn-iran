@@ -158,3 +158,71 @@ def capacidad(pred: pd.DataFrame, porcentajes=(0.10, 0.20, 0.30)) -> pd.DataFram
         })
 
     return pd.DataFrame(resultados)
+
+
+
+def comparar_grupo_prioritario(
+    pred: pd.DataFrame,
+    clientes: pd.DataFrame,
+    proporcion: float = 0.20
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compara las características del grupo de mayor riesgo
+    frente al resto de clientes.
+    """
+
+    from churn.caracterizacion import (
+        tabla_numericas,
+        tabla_categoricas
+    )
+
+    if not 0 < proporcion < 1:
+        raise ValueError("La proporción debe estar entre 0 y 1.")
+
+    # Ordenar clientes según su probabilidad de abandono.
+    ordenado = pred.sort_values(
+        "prob_churn",
+        ascending=False
+    ).reset_index(drop=True).copy()
+
+    # Identificar el grupo de mayor riesgo.
+    total = len(ordenado)
+    cantidad_prioritaria = round(proporcion * total)
+
+    ordenado["grupo_prioritario"] = 0
+    ordenado.loc[:cantidad_prioritaria - 1, "grupo_prioritario"] = 1
+
+    # Unir las predicciones con las características de los clientes.
+    grupos = ordenado[
+        ["fila_original", "grupo_prioritario"]
+    ].merge(
+        clientes,
+        on="fila_original",
+        how="inner",
+        validate="one_to_one"
+    )
+
+    # Crear una copia y utilizar churn como indicador del grupo.
+    # 1 = mayor riesgo; 0 = resto de clientes.
+    perfil = grupos.drop(columns="grupo_prioritario").copy()
+    perfil["churn"] = grupos["grupo_prioritario"].values
+
+    # Comparar variables numéricas y categóricas.
+    numericas = tabla_numericas(perfil)
+    categoricas = tabla_categoricas(perfil)
+
+    # Cambiar los nombres para reflejar que se comparan grupos de riesgo.
+    numericas = numericas.rename(columns={
+        "mediana_abandona": "mediana_alto_riesgo",
+        "q1_abandona": "q1_alto_riesgo",
+        "q3_abandona": "q3_alto_riesgo",
+        "mediana_permanece": "mediana_restantes",
+        "q1_permanece": "q1_restantes",
+        "q3_permanece": "q3_restantes"
+    })
+
+    categoricas = categoricas.rename(columns={
+        "tasa_churn": "proporcion_alto_riesgo"
+    })
+
+    return numericas, categoricas
+
