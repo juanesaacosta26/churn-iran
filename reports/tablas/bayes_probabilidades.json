@@ -1,0 +1,48 @@
+{
+  "cliente_mediano": {
+    "fallas_llamada": 6.0,
+    "quejas": 0.0,
+    "segundos_uso": 3030.0,
+    "frecuencia_sms": 22.0,
+    "numeros_distintos": 21.0,
+    "meses_suscripcion": 35.0,
+    "nivel_cobro": 0.0,
+    "plan_tarifa": 1.0,
+    "estado": 1.0,
+    "edad": 30.0
+  },
+  "P(OR_quejas > 1)": 1.0,
+  "P(OR_quejas > 10)": 1.0,
+  "P(OR_estado > 1)": 1.0,
+  "P(OR_fallas > 1)": 1.0,
+  "P(OR_plan < 1)": 0.588375,
+  "P(0.9 < OR_edad_10años < 1.1)": 0.618,
+  "prob_activo_sin_queja": {
+    "media": 0.0619,
+    "q2.5": 0.0433,
+    "q97.5": 0.0848
+  },
+  "prob_activo_con_queja": {
+    "media": 0.6929,
+    "q2.5": 0.5589,
+    "q97.5": 0.8068
+  },
+  "prob_inactivo_sin_queja": {
+    "media": 0.1771,
+    "q2.5": 0.1348,
+    "q97.5": 0.2251
+  },
+  "prob_inactivo_con_queja": {
+    "media": 0.8797,
+    "q2.5": 0.8136,
+    "q97.5": 0.9308
+  },
+  "dif_queja_activo_pp": {
+    "media": 63.0995,
+    "q2.5": 50.5574,
+    "q97.5": 73.9587
+  },
+  "prueba_ancho95_mediano": 0.044162307527865305,
+  "prueba_ancho95_p90": 0.160604812594871,
+  "prueba_dif_max_prob_bayes_vs_clasica": 0.05472240617422797
+}

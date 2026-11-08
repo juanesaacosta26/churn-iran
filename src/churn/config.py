@@ -57,12 +57,18 @@ ETIQUETAS = {
 # Arranque (jue 29 oct): columna de edad que se quita (son la misma información).
 COLUMNA_EDAD_A_QUITAR = "grupo_edad"
 
-# Reunión 1 (lun 2 nov): variables del modelo, según la propuesta de Juanes.
-# Provisional = todas menos grupo_edad.
-VARIABLES_MODELO = SERVICIO + USO + SUSCRIPCION + ["edad"]
+# Reunión 1 (aprobado el 4 nov, ver docs/decisiones.md): variables del modelo.
+# Salen grupo_edad (= edad), valor_cliente (VIF 53, R² = 0.98 con el resto) y
+# frecuencia_llamadas (r = 0.95 con segundos_uso). Ningún predictor pasa de VIF 2.3.
+VARIABLES_MODELO = [
+    "fallas_llamada", "quejas",                                   # servicio
+    "segundos_uso", "frecuencia_sms", "numeros_distintos",         # uso
+    "meses_suscripcion", "nivel_cobro", "plan_tarifa", "estado",   # suscripción
+    "edad",                                                        # demografía
+]
 # Sensibilidad ("¿en qué medida?", bloque 2):
 VARIABLES_SIN_ESTADO_QUEJAS = [v for v in VARIABLES_MODELO if v not in ("estado", "quejas")]
-VARIABLES_SOLO_USO = USO + ["fallas_llamada"]
+VARIABLES_SOLO_USO = ["segundos_uso", "frecuencia_sms", "numeros_distintos", "fallas_llamada"]
 
 PLIEGUES_CV = 5
 
