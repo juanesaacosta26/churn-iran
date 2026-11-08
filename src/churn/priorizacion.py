@@ -71,13 +71,44 @@ def tabla_deciles(pred: pd.DataFrame) -> pd.DataFrame:
     return tabla[columnas]
 
 
-def costo_por_umbral(pred: pd.DataFrame, costo_fn: float, costo_fp: float) -> pd.DataFrame:
-    """Para umbrales de 0.05 a 0.95: FP, FN y costo total = FN*costo_fn + FP*costo_fp.
-
-    Columnas: umbral, falsos_positivos, falsos_negativos, costo.
-    Con k de config.K_COSTOS: costo_fn = k, costo_fp = 1.
+def costo_por_umbral(
+    pred: pd.DataFrame,
+    costo_fn: float,
+    costo_fp: float
+) -> pd.DataFrame:
+    """Calcula los falsos positivos, falsos negativos y costo total
+    para umbrales entre 0.05 y 0.95.
     """
-    raise NotImplementedError
+    resultados = []
+
+    for umbral in [i / 100 for i in range(5, 100, 5)]:
+
+        # Clasificar clientes según su probabilidad de abandono.
+        predicho = pred["prob_churn"] >= umbral
+
+        # Identificar los errores de clasificación.
+        falsos_positivos = (
+            (predicho) & (pred["churn_real"] == 0)
+        ).sum()
+
+        falsos_negativos = (
+            (~predicho) & (pred["churn_real"] == 1)
+        ).sum()
+
+        # Calcular el costo total.
+        costo = (
+            falsos_negativos * costo_fn
+            + falsos_positivos * costo_fp
+        )
+
+        resultados.append({
+            "umbral": umbral,
+            "falsos_positivos": falsos_positivos,
+            "falsos_negativos": falsos_negativos,
+            "costo": costo
+        })
+
+    return pd.DataFrame(resultados)
 
 
 def capacidad(pred: pd.DataFrame, porcentajes=(0.10, 0.20, 0.30)) -> pd.DataFrame:
