@@ -1,4 +1,3 @@
-# Reemplazar @ianiss-data y @juanesaacosta26 por los usuarios reales de GitHub (Semana 0).
 *                         @juanesaacosta26 @ianiss-data
 scripts/preparar_datos.py @ianiss-data
 src/churn/datos.py        @ianiss-data
