@@ -1,7 +1,7 @@
 """Priorización (Ianis, bloques 2 y 3). Corre sobre el fixture."""
 import pytest
 
-from churn.priorizacion import capacidad, costo_por_umbral, tabla_deciles
+from churn.priorizacion import capacidad, costo_por_umbral, errores_por_subgrupo, tabla_deciles
 from tests.conftest import llamar
 
 
@@ -28,3 +28,13 @@ def test_costo_con_k_mayor_pesa_mas(fixture_pred):
     c2 = llamar(costo_por_umbral, fixture_pred, 2, 1).set_index("umbral")
     c10 = llamar(costo_por_umbral, fixture_pred, 10, 1).set_index("umbral")
     assert (c10["costo"] >= c2["costo"]).all()
+
+
+def test_errores_por_subgrupo_cuadran(fixture_pred, limpio):
+    t = llamar(errores_por_subgrupo, fixture_pred, limpio, 0.20)
+    contactos = round(0.20 * len(fixture_pred))
+    for _, g in t.groupby("variable"):
+        assert g["n"].sum() == len(fixture_pred)
+        assert g["contactados"].sum() == contactos
+        assert g["abandonos"].sum() == fixture_pred["churn_real"].sum()
+    assert (t["capturados"] + t["falsos_negativos"] == t["abandonos"]).all()

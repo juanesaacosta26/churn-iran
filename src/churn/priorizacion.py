@@ -226,3 +226,56 @@ def comparar_grupo_prioritario(
 
     return numericas, categoricas
 
+
+
+def errores_por_subgrupo(
+    pred: pd.DataFrame,
+    clientes: pd.DataFrame,
+    proporcion: float = 0.20,
+) -> pd.DataFrame:
+    """Auditoría de errores por subgrupo al contactar al `proporcion` de mayor riesgo.
+
+    Para cada subgrupo (queja, estado, plan, edad y clientes sin uso registrado) cuenta
+    cuántos abandonos hay, cuántos quedan dentro del grupo contactado (capturados) y
+    cuántos se escapan (falsos negativos), además de los contactos que no abandonan
+    (falsos positivos). Sirve para ver si el modelo deja por fuera, de forma desigual,
+    a algún tipo de cliente.
+    """
+    if not 0 < proporcion < 1:
+        raise ValueError("La proporción debe estar entre 0 y 1.")
+
+    ordenado = pred.sort_values("prob_churn", ascending=False).reset_index(drop=True).copy()
+    n_contactos = round(proporcion * len(ordenado))
+    ordenado["contactado"] = (ordenado.index < n_contactos).astype(int)
+
+    datos = ordenado[["fila_original", "churn_real", "contactado"]].merge(
+        clientes, on="fila_original", how="inner", validate="one_to_one"
+    )
+    datos["sin_uso"] = (datos["segundos_uso"] == 0).astype(int)
+
+    etiquetas = {
+        "quejas": {0: "sin queja", 1: "con queja"},
+        "estado": {1: "activo", 2: "no activo"},
+        "plan_tarifa": {1: "pago por uso", 2: "contrato"},
+        "sin_uso": {0: "con uso", 1: "sin uso registrado"},
+    }
+
+    filas = []
+    for variable in ["quejas", "estado", "plan_tarifa", "edad", "sin_uso"]:
+        for nivel, g in datos.groupby(variable):
+            abandonos = int(g["churn_real"].sum())
+            capturados = int(((g["contactado"] == 1) & (g["churn_real"] == 1)).sum())
+            contactados = int(g["contactado"].sum())
+            filas.append({
+                "variable": variable,
+                "nivel": etiquetas.get(variable, {}).get(nivel, str(nivel)),
+                "n": len(g),
+                "abandonos": abandonos,
+                "contactados": contactados,
+                "capturados": capturados,
+                "falsos_negativos": abandonos - capturados,
+                "falsos_positivos": contactados - capturados,
+                "exhaustividad": capturados / abandonos if abandonos else float("nan"),
+                "precision": capturados / contactados if contactados else float("nan"),
+            })
+    return pd.DataFrame(filas)

@@ -24,7 +24,8 @@ from churn.priorizacion import (
     tabla_deciles,
     capacidad,
     costo_por_umbral,
-    comparar_grupo_prioritario
+    comparar_grupo_prioritario,
+    errores_por_subgrupo,
 )
 
 
@@ -53,6 +54,9 @@ def main():
         clientes,
         proporcion=0.20
     )
+
+    # Auditoría de errores por subgrupo (20 % de mayor riesgo).
+    tabla_errores = errores_por_subgrupo(pred, clientes, proporcion=0.20)
 
     # Generar las tablas generales de priorización.
     deciles = tabla_deciles(pred)
@@ -176,6 +180,11 @@ def main():
         index=False
     )
 
+    tabla_errores.to_csv(
+        config.TABLAS / "errores_por_subgrupo.csv",
+        index=False
+    )
+
     # Mostrar resultados.
     print("\nTabla de deciles:")
     print(deciles.to_string(index=False))
@@ -191,6 +200,9 @@ def main():
 
     print("\nPerfil categórico: 20 % de mayor riesgo frente al resto")
     print(tabla_categorias_prioritarios.to_string(index=False))
+
+    print("\nErrores por subgrupo al contactar al 20 % de mayor riesgo")
+    print(tabla_errores.to_string(index=False))
 
     print("\nTablas guardadas correctamente en reports/tablas/")
     print("\nGráficas guardadas correctamente en reports/figures/")
