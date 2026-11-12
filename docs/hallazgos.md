@@ -90,6 +90,15 @@ Para el proyecto, esta diferencia puede ser útil al momento de identificar grup
 
 ![Distribución de fallas en llamadas](../reports/figures/caracterizacion_fallas_llamada.png)
 
+## Auditoría de errores por subgrupo
+
+Al contactar al 20 % de mayor riesgo con el bosque aleatorio (143 de 713 clientes de prueba), se
+capturan 102 de los 112 abandonos. Los 10 que se escapan son **todos clientes sin queja y con uso
+registrado**: el modelo encuentra al 100 % de los que se quejaron (54 de 54) y al 82.8 % de los que no
+(48 de 58). Por estado, la exhaustividad es 82.8 % en activos y 94.0 % en no activos. Es decir, el
+punto débil del modelo es el cliente que se va "en silencio", sin quejarse y sin dejar de usar el
+servicio (`reports/tablas/errores_por_subgrupo.csv`).
+
 ## Conclusión general
 
 En conclusión, los resultados muestran que el abandono está asociado con diferencias en la experiencia del cliente, la utilización del servicio, el valor registrado y las condiciones de contratación. Las quejas y el estado del cliente presentan las diferencias más marcadas en las variables categóricas, mientras que los segundos de uso y el valor del cliente destacan entre las variables numéricas por sus diferencias entre grupos y la magnitud de sus efectos.

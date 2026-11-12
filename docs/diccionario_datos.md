@@ -30,7 +30,7 @@ Las variables corresponden a los **primeros 9 meses**; `churn` es el estado al *
 - Tasa de churn: 15.7 % en la base completa; 15.6 % (446 de 2850) sin duplicados.
 - `edad` y `grupo_edad` contienen la misma información (cada grupo corresponde a una sola edad).
 - 107 clientes únicos tienen `segundos_uso = 0`.
-- `valor_cliente` se deriva del uso: revisar si aporta algo distinto (Juanes, bloque 1).
+- `valor_cliente` se deriva del uso y no entra al modelo (VIF 53; ver `docs/decisiones.md`).
 
 ## Diferencia entre la base original y la base procesada
 
